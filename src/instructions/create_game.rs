@@ -19,6 +19,7 @@ impl<AI> Instruction<AI> for CreateGame {
 #[from(
     data = (create_data: CreateGameData),
     custom = create_data.wager.checked_mul(2).is_some(),
+    custom = create_data.turn_length > 0,
 )]
 #[validate(generics = [<'a> where AI: ToSolanaAccountInfo<'a>])]
 pub struct CreateGameAccounts<AI> {
@@ -29,7 +30,13 @@ pub struct CreateGameAccounts<AI> {
     #[validate(custom = &self.player_profile.authority == self.authority.key())]
     pub player_profile: ReadOnlyDataAccount<AI, TutorialAccounts, PlayerProfile>,
     /// The game to be created.
-    #[from(data = Game::new(player_profile.info().key(), create_data.creator_player, create_data.signer_bump, create_data.wager, create_data.turn_length))]
+    #[from(data = Game::new(
+        player_profile.info().key(),
+        create_data.creator_player,
+        create_data.signer_bump,
+        create_data.wager,
+        create_data.turn_length,
+    ))]
     #[validate(data = InitArgs{
         system_program: Some(&self.system_program),
         space: InitStaticSized,

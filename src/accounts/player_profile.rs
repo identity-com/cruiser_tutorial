@@ -8,7 +8,7 @@ pub struct PlayerProfile {
     /// The number of wins this player has.
     pub wins: u64,
     /// The number of losses this player has.
-    pub loses: u64,
+    pub losses: u64,
     /// The number of draws this player has.
     pub draws: u64,
     /// The number of forfeits this player has.
@@ -30,7 +30,7 @@ impl PlayerProfile {
         Self {
             authority: *authority,
             wins: 0,
-            loses: 0,
+            losses: 0,
             draws: 0,
             forfeits: 0,
             lamports_won: 0,

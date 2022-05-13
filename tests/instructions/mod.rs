@@ -1,9 +1,9 @@
 mod create_game;
 mod create_profile;
+mod forfeit_game;
 mod join_game;
 
 use cruiser::prelude::*;
-use futures::executor::block_on;
 use reqwest::Client;
 use std::cell::UnsafeCell;
 use std::path::Path;
@@ -163,34 +163,30 @@ impl TestGuard {
 }
 impl Drop for TestGuard {
     fn drop(&mut self) {
-        block_on(async {
-            let mut count = self.setup.test_count.load(Ordering::SeqCst);
-            let should_kill = loop {
-                let (replace, should_kill) = match count {
-                    count if count < 1 => panic!("`TestGuard` dropped when count less than 1"),
-                    1 => (-1, true),
-                    count => (count - 1, false),
-                };
-                match self.setup.test_count.compare_exchange_weak(
-                    count,
-                    replace,
-                    Ordering::SeqCst,
-                    Ordering::SeqCst,
-                ) {
-                    Ok(_) => break should_kill,
-                    Err(new_count) => {
-                        count = new_count;
-                        yield_now().await;
-                    }
-                }
+        let mut count = self.setup.test_count.load(Ordering::SeqCst);
+        let should_kill = loop {
+            let (replace, should_kill) = match count {
+                count if count < 1 => panic!("`TestGuard` dropped when count less than 1"),
+                1 => (-1, true),
+                count => (count - 1, false),
             };
-            if should_kill {
-                let mut local = unsafe { (&mut *self.setup.validator.get()).take().unwrap() };
-                local.start_kill().unwrap();
-                local.wait().await.unwrap();
-                assert_eq!(self.setup.test_count.fetch_add(1, Ordering::SeqCst), -1);
-                println!("Validator cleaned up properly");
+            match self.setup.test_count.compare_exchange_weak(
+                count,
+                replace,
+                Ordering::SeqCst,
+                Ordering::SeqCst,
+            ) {
+                Ok(_) => break should_kill,
+                Err(new_count) => {
+                    count = new_count;
+                }
             }
-        });
+        };
+        if should_kill {
+            let mut local = unsafe { (&mut *self.setup.validator.get()).take().unwrap() };
+            local.start_kill().unwrap();
+            assert_eq!(self.setup.test_count.fetch_add(1, Ordering::SeqCst), -1);
+            println!("Validator cleaned up properly");
+        }
     }
 }

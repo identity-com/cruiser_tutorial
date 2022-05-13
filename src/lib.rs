@@ -38,6 +38,9 @@ pub enum TutorialInstructions {
     /// Join a game.
     #[instruction(instruction_type = instructions::JoinGame)]
     JoinGame,
+    /// Forfeits another player from a game
+    #[instruction(instruction_type = instructions::ForfeitGame)]
+    ForfeitGame,
 }
 
 /// This is the list of accounts used by the program.
