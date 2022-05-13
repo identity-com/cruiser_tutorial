@@ -1,4 +1,6 @@
 use crate::accounts::Player;
+use crate::pda::GameSignerSeeder;
+use crate::{Game, PlayerProfile, TutorialAccounts};
 use cruiser::prelude::*;
 use cruiser::solana_program::clock::Clock;
 
@@ -217,8 +219,6 @@ mod cpi {
     }
 }
 
-use crate::pda::GameSignerSeeder;
-use crate::{Game, PlayerProfile, TutorialAccounts};
 #[cfg(feature = "client")]
 pub use client::*;
 
