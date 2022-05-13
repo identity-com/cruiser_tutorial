@@ -172,7 +172,7 @@ mod client {
         let funder = funder.into();
         InstructionSet {
             instructions: vec![
-                cpi::CreateProfileCPI::new(
+                CreateProfileCPI::new(
                     SolanaAccountMeta::new_readonly(authority.pubkey(), true),
                     SolanaAccountMeta::new(profile.pubkey(), true),
                     SolanaAccountMeta::new(funder.pubkey(), true),

@@ -65,6 +65,14 @@ impl Game {
     pub fn is_started(&self) -> bool {
         self.last_turn > 0
     }
+    
+    /// Tells whether the other player is valid to join the game.
+    pub fn is_valid_other_player(&self, other_player: &Pubkey) -> bool {
+        match self.creator {
+            Player::One => self.player2 == *other_player || self.player2 == Pubkey::new_from_array([0; 32]),
+            Player::Two => self.player1 == *other_player || self.player1 == Pubkey::new_from_array([0; 32]),
+        }
+    }
 }
 
 /// A player

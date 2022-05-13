@@ -97,6 +97,8 @@ mod processor {
             data: Self::InstructionData,
             accounts: &mut <CreateGame as Instruction<AI>>::Accounts,
         ) -> CruiserResult<<CreateGame as Instruction<AI>>::ReturnType> {
+            msg!("Transferring wager");
+
             // Transfer the wager from the wager_funder to the game signer.
             accounts.system_program.transfer(
                 CPIChecked,
@@ -106,6 +108,8 @@ mod processor {
                 empty(),
             )?;
 
+            msg!("Setting other player");
+
             // Set the other player's profile if locked game.
             if let Some(other_player_profile) = &accounts.other_player_profile {
                 *match data.creator_player {
@@ -114,6 +118,7 @@ mod processor {
                 } = *other_player_profile.info().key()
             }
 
+            msg!("Created game");
             Ok(())
         }
     }
@@ -430,7 +435,7 @@ mod client {
         match other_player_profile {
             Some(other_player_profile) => InstructionSet {
                 instructions: vec![
-                    cpi::CreateGameCPI::new_with_locked_player(
+                    CreateGameCPI::new_with_locked_player(
                         SolanaAccountMeta::new_readonly(authority.pubkey(), true),
                         SolanaAccountMeta::new(player_profile, false),
                         SolanaAccountMeta::new(game.pubkey(), true),
@@ -451,7 +456,7 @@ mod client {
             },
             None => InstructionSet {
                 instructions: vec![
-                    cpi::CreateGameCPI::new(
+                    CreateGameCPI::new(
                         SolanaAccountMeta::new_readonly(authority.pubkey(), true),
                         SolanaAccountMeta::new(player_profile, false),
                         SolanaAccountMeta::new(game.pubkey(), true),
@@ -507,7 +512,7 @@ mod client {
         out.add_set(match other_player_profile {
             Some(other_player_profile) => InstructionSet {
                 instructions: vec![
-                    cpi::CreateGameCPI::new_zeroed_with_locked_player(
+                    CreateGameCPI::new_zeroed_with_locked_player(
                         SolanaAccountMeta::new_readonly(authority.pubkey(), true),
                         SolanaAccountMeta::new(player_profile, false),
                         SolanaAccountMeta::new(game_key, false),
@@ -525,7 +530,7 @@ mod client {
             },
             None => InstructionSet {
                 instructions: vec![
-                    cpi::CreateGameCPI::new_zeroed(
+                    CreateGameCPI::new_zeroed(
                         SolanaAccountMeta::new_readonly(authority.pubkey(), true),
                         SolanaAccountMeta::new(player_profile, false),
                         SolanaAccountMeta::new(game_key, false),

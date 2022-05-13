@@ -1,5 +1,6 @@
 mod create_game;
 mod create_profile;
+mod join_game;
 
 use cruiser::prelude::*;
 use futures::executor::block_on;

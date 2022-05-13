@@ -35,6 +35,9 @@ pub enum TutorialInstructions {
     /// Create a new game.
     #[instruction(instruction_type = instructions::CreateGame)]
     CreateGame,
+    /// Join a game.
+    #[instruction(instruction_type = instructions::JoinGame)]
+    JoinGame,
 }
 
 /// This is the list of accounts used by the program.
@@ -46,7 +49,7 @@ pub enum TutorialInstructions {
 #[derive(Debug, AccountList)]
 pub enum TutorialAccounts {
     /// A game board
-    GameBoard(Game),
+    Game(Game),
     /// A player's profile
     PlayerProfile(PlayerProfile),
 }
