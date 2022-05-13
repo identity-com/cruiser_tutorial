@@ -19,6 +19,7 @@ pub struct Game {
     /// The wager per player in lamports.
     pub wager: u64,
     /// The amount of time in seconds to play a given turn before forfeiting.
+    /// 0 means no time limit.
     pub turn_length: UnixTimestamp,
     /// The last turn timestamp. If 0 game is not started.
     pub last_turn: UnixTimestamp,
@@ -65,12 +66,16 @@ impl Game {
     pub fn is_started(&self) -> bool {
         self.last_turn > 0
     }
-    
+
     /// Tells whether the other player is valid to join the game.
     pub fn is_valid_other_player(&self, other_player: &Pubkey) -> bool {
         match self.creator {
-            Player::One => self.player2 == *other_player || self.player2 == Pubkey::new_from_array([0; 32]),
-            Player::Two => self.player1 == *other_player || self.player1 == Pubkey::new_from_array([0; 32]),
+            Player::One => {
+                self.player2 == *other_player || self.player2 == Pubkey::new_from_array([0; 32])
+            }
+            Player::Two => {
+                self.player1 == *other_player || self.player1 == Pubkey::new_from_array([0; 32])
+            }
         }
     }
 }

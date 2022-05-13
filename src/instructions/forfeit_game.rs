@@ -27,7 +27,8 @@ pub struct ForfeitGameAccounts<AI> {
     pub other_profile: DataAccount<AI, TutorialAccounts, PlayerProfile>,
     /// The game the other player has forfeited.
     #[validate(
-        custom = self.game.last_turn + self.game.turn_length < Clock::get()?.unix_timestamp,
+        custom = self.game.turn_length == 0
+            || self.game.last_turn.saturating_add(self.game.turn_length) < Clock::get()?.unix_timestamp,
         custom = match self.game.next_play {
             Player::One => self.player_profile.info().key() == &self.game.player2,
             Player::Two => self.player_profile.info().key() == &self.game.player1,
