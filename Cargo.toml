@@ -1,0 +1,37 @@
+[package]
+name = "cruiser_tutorial"
+version = "0.0.0"
+edition = "2021"
+
+# This makes solana realize this is a program
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+# The default is building the program for deployment, you can change this if you want
+default = ["entrypoint"]
+# This gates the entrypoint macro
+entrypoint = ["processor"]
+# This gates the processor functions on the program
+processor = []
+# This gates CPI helper functions
+cpi = []
+# This gates client functions
+client = ["cruiser/client", "cpi"]
+
+[dependencies]
+# This tutorial targets the unrealeased version 0.3.0 of cruiser. This will eventually be released.
+cruiser = { git = "https://github.com/identity-com/cruiser.git", branch = "release/0.3.0" }
+
+[dev-dependencies]
+cruiser = { git = "https://github.com/identity-com/cruiser.git", branch = "release/0.3.0", features = ["client"] }
+reqwest = "0.11.10"
+futures = "0.3.21"
+tokio = { version = "1.17.0", features = ["full"] }
+
+[[test]]
+name = "all_tests"
+required-features = ["client"]
+
+[patch."https://github.com/identity-com/cruiser.git"]
+cruiser = { path = "../cruiser"}
