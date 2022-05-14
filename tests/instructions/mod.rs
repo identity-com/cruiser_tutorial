@@ -2,6 +2,7 @@ mod create_game;
 mod create_profile;
 mod forfeit_game;
 mod join_game;
+mod make_move;
 
 use cruiser::prelude::*;
 use reqwest::Client;

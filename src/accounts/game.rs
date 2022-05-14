@@ -130,6 +130,23 @@ where
         Board::Unsolved([[S::default(); 3]; 3])
     }
 }
+impl<S> Board<S> {
+    /// Gets an index of the board if unsolved.
+    pub fn get(&self, index: [u8; 2]) -> Option<&S> {
+        match self {
+            Board::Unsolved(board) => board.get(index[0] as usize)?.get(index[1] as usize),
+            Board::Solved(_) => None,
+        }
+    }
+
+    /// Gets an index mutably of the board if unsolved.
+    pub fn get_mut(&mut self, index: [u8; 2]) -> Option<&mut S> {
+        match self {
+            Board::Unsolved(board) => board.get_mut(index[0] as usize)?.get_mut(index[1] as usize),
+            Board::Solved(_) => None,
+        }
+    }
+}
 
 /// This trait lets us use the same logic for checking winners on the sub-boards and main board.
 pub trait CurrentWinner {

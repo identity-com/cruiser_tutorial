@@ -40,7 +40,7 @@ pub struct ForfeitGameAccounts<AI> {
             Player::Two => self.other_profile.info().key() == &self.game.player2,
         },
     )]
-    pub game: CloseAccount<AI, DataAccount<AI, TutorialAccounts, Game>>,
+    pub game: Box<CloseAccount<AI, DataAccount<AI, TutorialAccounts, Game>>>,
     /// The game's signer.
     #[validate(writable, data = (GameSignerSeeder{ game: *self.game.info().key() }, self.game.signer_bump))]
     pub game_signer: Seeds<AI, GameSignerSeeder>,

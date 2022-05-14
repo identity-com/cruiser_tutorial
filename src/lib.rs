@@ -41,6 +41,9 @@ pub enum TutorialInstructions {
     /// Forfeits another player from a game
     #[instruction(instruction_type = instructions::ForfeitGame)]
     ForfeitGame,
+    /// Makes a move.
+    #[instruction(instruction_type = instructions::MakeMove)]
+    MakeMove,
 }
 
 /// This is the list of accounts used by the program.

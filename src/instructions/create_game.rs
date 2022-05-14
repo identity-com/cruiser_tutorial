@@ -46,7 +46,7 @@ pub struct CreateGameAccounts<AI> {
         rent: None,
         cpi: CPIChecked,
     })]
-    pub game: InitOrZeroedAccount<AI, TutorialAccounts, Game>,
+    pub game: Box<InitOrZeroedAccount<AI, TutorialAccounts, Game>>,
     /// The game signer that will hold the wager.
     #[validate(writable, data = (GameSignerSeeder{ game: *self.game.info().key() }, self.game.signer_bump))]
     pub game_signer: Seeds<AI, GameSignerSeeder>,

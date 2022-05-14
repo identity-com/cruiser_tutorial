@@ -29,7 +29,7 @@ pub struct JoinGameAccounts<AI> {
         custom = !self.game.is_started(),
         custom = self.game.is_valid_other_player(self.player_profile.info().key()),
     )]
-    pub game: DataAccount<AI, TutorialAccounts, Game>,
+    pub game: Box<DataAccount<AI, TutorialAccounts, Game>>,
     /// The signer of the game
     #[validate(writable, data = (GameSignerSeeder{ game: *self.game.info().key() }, self.game.signer_bump))]
     pub game_signer: Seeds<AI, GameSignerSeeder>,

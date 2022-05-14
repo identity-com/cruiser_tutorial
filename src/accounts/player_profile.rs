@@ -11,8 +11,6 @@ pub struct PlayerProfile {
     pub losses: u64,
     /// The number of draws this player has.
     pub draws: u64,
-    /// The number of forfeits this player has.
-    pub forfeits: u64,
     /// The amount of lamports this player has won.
     pub lamports_won: u64,
     /// The amount of lamports this player has lost.
@@ -32,7 +30,6 @@ impl PlayerProfile {
             wins: 0,
             losses: 0,
             draws: 0,
-            forfeits: 0,
             lamports_won: 0,
             lamports_lost: 0,
             elo: Self::INITIAL_ELO,
